@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="format-detection" content="telephone=no">
 <title>Klubben 2.0 — Merkantila Klubben r.f.</title>
 <meta name="description" content="Klubben 2.0">
 <meta property="og:type" content="website">
@@ -407,6 +408,46 @@
     text-align: right;
   }
 
+  @media (max-width: 640px) {
+    .donate-card { padding: 28px 22px; }
+    .donate-card h3 { margin-bottom: 8px; }
+    .donate-field {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 6px;
+      padding: 18px 0;
+    }
+    .donate-field-with-note { padding: 18px 0; }
+    .donate-field .label,
+    .field-row .label {
+      font-size: 12.5px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .donate-field .value,
+    .field-row .value {
+      font-size: 16px;
+      line-height: 1.45;
+    }
+    .value-group {
+      width: 100%;
+      justify-content: space-between;
+    }
+    #val-iban {
+      white-space: nowrap;
+      font-size: clamp(13px, 4.1vw, 16px);
+    }
+    .copy-btn { width: 34px; height: 34px; }
+    .field-row {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 6px;
+    }
+    .field-note { justify-content: flex-start; margin-top: 10px; }
+    .field-note .value-alt { text-align: left; font-size: 13.5px; }
+    .legal-note { margin-top: 22px; font-size: 13.5px; }
+  }
+
   /* ---------------- CONTACT ---------------- */
   .contact-section {
     padding: 96px 0;
@@ -799,10 +840,10 @@
         <div class="donate-field donate-field-with-note">
           <div class="field-row">
             <span class="label">Meddelande</span>
-            <span class="value">Klubben2.0 + ditt namn</span>
+            <span class="value">RA/2026/1322 + ditt namn</span>
           </div>
           <div class="field-note">
-            <span class="value-alt">Alternativt: Klubben2.0 + anonym</span>
+            <span class="value-alt">Alternativt: RA/2026/1322 + anonym</span>
           </div>
         </div>
         <div class="legal-note">
