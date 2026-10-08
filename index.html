@@ -217,46 +217,225 @@
   }
   .about-side li:last-child { border-bottom: none; }
 
-  /* ---------------- TIMELINE ---------------- */
+  /* ---------------- TIMELINE (horisontell) ---------------- */
   .timeline-section {
-    padding: 90px 0;
+    padding: 96px 0 90px;
     background: var(--surface);
     border-top: 1px solid var(--line);
     border-bottom: 1px solid var(--line);
+    overflow: hidden;
   }
-  .timeline-section h2 {
-    font-size: 28px;
-    margin-bottom: 46px;
+  .tl-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 22px 28px;
+    margin-bottom: 52px;
   }
-  .timeline {
+  .timeline-section h2 { font-size: 28px; margin: 0 0 14px; }
+  .tl-lede {
+    color: var(--parchment-dim);
+    font-size: 16px;
+    max-width: 540px;
+    margin: 0;
+  }
+  .tl-controls { display: flex; gap: 10px; flex-shrink: 0; }
+  .tl-btn {
+    width: 46px;
+    height: 46px;
+    padding: 0;
+    border-radius: 50%;
+    border: 1px solid var(--brass-dim);
+    background: transparent;
+    color: var(--brass-bright);
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
+  }
+  .tl-btn:hover:not(:disabled) { background: rgba(201, 162, 75, 0.14); border-color: var(--brass); }
+  .tl-btn:disabled { opacity: 0.28; cursor: default; }
+  .tl-btn svg { width: 20px; height: 20px; }
+
+  .htl-scroller {
+    --pad: max(28px, calc(50vw - 492px));
+    --fl: 0px;
+    --fr: 72px;
+    margin: 0 calc(50% - 50vw);
+    padding: 0 0 22px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x proximity;
+    scroll-padding-left: var(--pad);
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+    cursor: grab;
+    -webkit-mask-image: linear-gradient(to right, transparent 0, #000 var(--fl), #000 calc(100% - var(--fr)), transparent 100%);
+    mask-image: linear-gradient(to right, transparent 0, #000 var(--fl), #000 calc(100% - var(--fr)), transparent 100%);
+  }
+  .htl-scroller::-webkit-scrollbar { display: none; }
+  .htl-scroller.scrolled { --fl: 56px; }
+  .htl-scroller.end { --fr: 0px; }
+  .htl-scroller.drag { scroll-snap-type: none; cursor: grabbing; user-select: none; }
+  .htl-scroller:focus-visible { outline-offset: -2px; }
+
+  .htl-inner {
+    --w: 264px;
     position: relative;
-    padding-left: 28px;
-    border-left: 2px solid var(--brass-dim);
+    display: flex;
+    gap: 22px;
+    width: max-content;
+    margin: 0;
+    padding: 0 var(--pad);
+    list-style: none;
   }
-  .tl-item {
-    position: relative;
-    padding-bottom: 40px;
-  }
-  .tl-item:last-child { padding-bottom: 0; }
-  .tl-item::before {
+  .htl-inner::before,
+  .htl-inner::after {
     content: "";
     position: absolute;
-    left: -34px;
-    top: 4px;
-    width: 11px;
-    height: 11px;
+    top: 65px;
+    height: 2px;
+    border-radius: 2px;
+  }
+  .htl-inner::before {
+    left: var(--pad);
+    right: 0;
+    background: linear-gradient(to right, rgba(140, 111, 53, 0.65) calc(100% - var(--pad) - 120px), transparent);
+  }
+  .htl-inner::after {
+    left: var(--pad);
+    width: var(--lit, 0px);
+    background: linear-gradient(to right, var(--brass), var(--brass-bright));
+    box-shadow: 0 0 14px rgba(201, 162, 75, 0.5);
+    transition: width 0.45s ease;
+  }
+
+  .htl-item {
+    position: relative;
+    flex: 0 0 var(--w);
+    width: var(--w);
+    scroll-snap-align: start;
+  }
+  .htl-item::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 58px;
+    width: 16px;
+    height: 16px;
     border-radius: 50%;
     background: var(--brass);
-    border: 2px solid var(--surface);
-    box-shadow: 0 0 0 2px var(--brass-dim);
+    border: 2px solid var(--brass-bright);
+    box-shadow: 0 0 0 5px rgba(201, 162, 75, 0.14);
+    z-index: 2;
+    transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
   }
+  .htl-item.major::before { left: -2px; top: 56px; width: 20px; height: 20px; }
+  .htl-item.dim::before {
+    background: var(--surface);
+    border-color: var(--brass-dim);
+    box-shadow: none;
+    animation: none;
+  }
+
   .tl-year {
-    font-family: var(--font-mono);
+    height: 52px;
+    display: flex;
+    align-items: flex-end;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 34px;
+    line-height: 1;
+    letter-spacing: -0.01em;
     color: var(--brass-bright);
-    font-size: 15px;
-    margin-bottom: 6px;
   }
-  .tl-item p { color: var(--parchment-dim); font-size: 15.5px; margin: 0; }
+  .htl-item.major .tl-year { font-size: 44px; }
+
+  .tl-card {
+    position: relative;
+    margin-top: 28px;
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 18px 20px 20px;
+  }
+  .tl-card::before {
+    content: "";
+    position: absolute;
+    left: 7px;
+    top: -14px;
+    width: 2px;
+    height: 14px;
+    background: rgba(140, 111, 53, 0.7);
+  }
+  .htl-item.major .tl-card {
+    background: linear-gradient(160deg, #33241b, var(--surface-2));
+    border-color: rgba(201, 162, 75, 0.42);
+  }
+  .htl-item.future .tl-card {
+    background: linear-gradient(160deg, var(--oxblood-deep), var(--surface-2));
+    border-color: var(--brass);
+    box-shadow: 0 0 0 1px rgba(201, 162, 75, 0.16), 0 22px 44px -22px rgba(0, 0, 0, 0.7);
+  }
+  .tl-card p {
+    margin: 0;
+    color: var(--parchment-dim);
+    font-size: 15.5px;
+    line-height: 1.55;
+  }
+  .htl-item.future .tl-card p { color: var(--parchment); }
+  .tl-tag {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--brass);
+    margin-bottom: 8px;
+  }
+
+  .htl-item.now::before { animation: tl-pulse 2.4s ease-out infinite; }
+  @keyframes tl-pulse {
+    0%   { box-shadow: 0 0 0 0 rgba(224, 193, 121, 0.55); }
+    80%  { box-shadow: 0 0 0 16px rgba(224, 193, 121, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(224, 193, 121, 0); }
+  }
+
+  .tl-hint {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: 6px;
+    color: var(--parchment-dim);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+  }
+  .tl-bar {
+    flex: 1;
+    height: 2px;
+    background: var(--line);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .tl-bar span {
+    display: block;
+    height: 100%;
+    width: 0;
+    background: var(--brass);
+    transition: width 0.2s ease;
+  }
+
+  @media (max-width: 640px) {
+    .htl-inner { --w: min(76vw, 280px); gap: 16px; }
+    .tl-year { font-size: 30px; }
+    .htl-item.major .tl-year { font-size: 38px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .htl-item.now::before { animation: none; }
+  }
 
   /* ---------------- DONOR WALL ---------------- */
   .wall-section {
@@ -730,38 +909,129 @@
 
   <section class="timeline-section" id="historia">
     <div class="wrap">
-      <h2>Historia</h2>
-      <div class="timeline">
-        <div class="tl-item">
+      <div class="tl-head">
+        <div>
+          <h2>Historia</h2>
+          <p class="tl-lede">
+            Merkantila Klubben grundades 1928 och har haft egen lokal sedan 1965. Här är
+            några av stationerna på vägen.
+          </p>
+        </div>
+        <div class="tl-controls">
+          <button class="tl-btn" id="tl-prev" type="button" aria-label="Bläddra bakåt i tiden"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+          <button class="tl-btn" id="tl-next" type="button" aria-label="Bläddra framåt i tiden"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
+        </div>
+      </div>
+      <div class="htl-scroller" id="htl" tabindex="0" role="region" aria-label="Merkantila Klubbens historia, bläddra i sidled">
+        <ol class="htl-inner">
+        <li class="htl-item major">
           <div class="tl-year">1928</div>
-          <p>Merkantila Klubben grundas vid Handelshögskolan, Åbo Akademi.</p>
-        </div>
-        <div class="tl-item">
-          <div class="tl-year">1960-talet</div>
-          <p>
-            Klubben är vårt hem, vecka efter vecka, årskurs efter
-            årskurs.
-          </p>
-        </div>
-        <div class="tl-item">
+          <div class="tl-card">
+            <p>Merkantila Klubben grundas vid Handelshögskolan, Åbo Akademi.</p>
+          </div>
+        </li>
+        <li class="htl-item major">
+          <div class="tl-year">1965</div>
+          <div class="tl-card">
+            <p>Klubben, föreningens egen lokal, invigs den 4 november.</p>
+          </div>
+        </li>
+        <li class="htl-item">
+          <div class="tl-year">1966</div>
+          <div class="tl-card">
+            <p>Första inredningen skaffas: en jukebox och flipperspel.</p>
+          </div>
+        </li>
+        <li class="htl-item">
           <div class="tl-year">1975</div>
-          <p>Klubben målas för första gången.</p>
-        </div>
-        <div class="tl-item">
+          <div class="tl-card">
+            <p>Vår lokal målas för första gången.</p>
+          </div>
+        </li>
+        <li class="htl-item">
+          <div class="tl-year">1976</div>
+          <div class="tl-card">
+            <p>Lärarmiddagen ordnas för första gången.</p>
+          </div>
+        </li>
+        <li class="htl-item">
           <div class="tl-year">1978</div>
-          <p>Klubben firar 50 år.</p>
-        </div>
-        <div class="tl-item">
-          <div class="tl-year">Just nu</div>
-          <p>
-            Byggnaden renoveras. När den är klar flyttar klubben till ett
-            nytt, större utrymme.
-          </p>
-        </div>
-        <div class="tl-item">
+          <div class="tl-card">
+            <p>Merkantila Klubben firar 50 år.</p>
+          </div>
+        </li>
+        <li class="htl-item">
+          <div class="tl-year">1995</div>
+          <div class="tl-card">
+            <p>Vår lokal fyller 30 år och får en större renovering. Klubbens logo målas på väggen.</p>
+          </div>
+        </li>
+        <li class="htl-item">
+          <div class="tl-year">2006</div>
+          <div class="tl-card">
+            <p>Nuvarande möbleringen byggs av medlemmarna själva.</p>
+          </div>
+        </li>
+        <li class="htl-item">
+          <div class="tl-year">2016</div>
+          <div class="tl-card">
+            <p>HHÅA flyttade till Asa och MK miste klubben för en stund.</p>
+          </div>
+        </li>
+        <li class="htl-item">
+          <div class="tl-year">2017</div>
+          <div class="tl-card">
+            <p>Klubben börjar delas med Åka.</p>
+          </div>
+        </li>
+        <li class="htl-item">
+          <div class="tl-year">2019</div>
+          <div class="tl-card">
+            <p>Konceptet Disco Carina återupplivas.</p>
+          </div>
+        </li>
+        <li class="htl-item">
+          <div class="tl-year">2020–2021</div>
+          <div class="tl-card">
+            <p>Covid-19 stänger allt.</p>
+          </div>
+        </li>
+        <li class="htl-item">
+          <div class="tl-year">2022</div>
+          <div class="tl-card">
+            <p>Det nuvarande ljussystemet skaffas.</p>
+          </div>
+        </li>
+        <li class="htl-item">
+          <div class="tl-year">2024</div>
+          <div class="tl-card">
+            <p>Det nuvarande ljudsystemet skaffas.</p>
+          </div>
+        </li>
+        <li class="htl-item major">
+          <div class="tl-year">2025</div>
+          <div class="tl-card">
+            <p>Klubben fyller 60 år.</p>
+          </div>
+        </li>
+        <li class="htl-item now">
+          <div class="tl-year">2026</div>
+          <div class="tl-card">
+            <span class="tl-tag">Just nu</span>
+            <p>Byggnaden renoveras. När den är klar flyttar Klubben till ett nytt, större utrymme.</p>
+          </div>
+        </li>
+        <li class="htl-item major future">
           <div class="tl-year">2027</div>
-          <p>Klubben 2.0 öppnar – nästa kapitel i samma hus, inrett av medlemmarna själva.</p>
-        </div>
+          <div class="tl-card">
+            <span class="tl-tag">Vårt mål</span>
+            <p>Klubben 2.0 – nästa kapitel i samma hus, inrett av medlemmarna själva.</p>
+          </div>
+        </li>
+        </ol>
+      </div>
+      <div class="tl-hint">
+        <div class="tl-bar"><span id="tl-bar"></span></div>
       </div>
     </div>
   </section>
@@ -990,6 +1260,71 @@
   });
 </script>
 
+<script>
+(function () {
+  var sc = document.getElementById('htl');
+  if (!sc) return;
+  var items = [].slice.call(sc.querySelectorAll('.htl-item'));
+  var inner = sc.querySelector('.htl-inner');
+  var prev = document.getElementById('tl-prev');
+  var next = document.getElementById('tl-next');
+  var bar = document.getElementById('tl-bar');
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function update() {
+    if (!sc.clientWidth) return;
+    var max = sc.scrollWidth - sc.clientWidth;
+    var x = sc.scrollLeft;
+    if (x > 8) sc.classList.add('scrolled'); else sc.classList.remove('scrolled');
+    if (x >= max - 8) sc.classList.add('end'); else sc.classList.remove('end');
+    prev.disabled = x <= 8;
+    next.disabled = x >= max - 8;
+    bar.style.width = (sc.scrollWidth > 0 ? Math.min(100, (x + sc.clientWidth) / sc.scrollWidth * 100) : 100) + '%';
+
+    var origin = sc.getBoundingClientRect().left - x;
+    var reach = x + sc.clientWidth * 0.82;
+    var start = items[0].getBoundingClientRect().left - origin;
+    var lit = 0;
+    items.forEach(function (el) {
+      var left = el.getBoundingClientRect().left - origin;
+      var on = left < reach;
+      if (on) el.classList.remove('dim'); else el.classList.add('dim');
+      if (on) lit = left - start;
+    });
+    inner.style.setProperty('--lit', lit + 'px');
+  }
+
+  var ticking = false;
+  function onScroll() {
+    if (!ticking) { ticking = true; window.requestAnimationFrame(function () { update(); ticking = false; }); }
+  }
+  sc.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll);
+
+  function step(dir) {
+    sc.scrollBy({ left: dir * sc.clientWidth * 0.75, behavior: reduce ? 'auto' : 'smooth' });
+  }
+  prev.addEventListener('click', function () { step(-1); });
+  next.addEventListener('click', function () { step(1); });
+
+  var down = false, sx = 0, sl = 0;
+  sc.addEventListener('pointerdown', function (e) {
+    if (e.pointerType !== 'mouse' || e.button !== 0) return;
+    down = true; sx = e.clientX; sl = sc.scrollLeft;
+    sc.classList.add('drag');
+  });
+  window.addEventListener('pointermove', function (e) {
+    if (down) sc.scrollLeft = sl - (e.clientX - sx);
+  });
+  window.addEventListener('pointerup', function () {
+    if (!down) return;
+    down = false;
+    sc.classList.remove('drag');
+  });
+
+  update();
+})();
+</script>
 <script data-goatcounter="https://klubben2.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
 </body>
 </html>
